@@ -5,6 +5,8 @@ import { LoggerMiddleware } from './common/interceptors/logger.middleware';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { logSuccess, logWarning } from './common/utils/logger';
+import { UsersModule } from './modules/users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -29,6 +31,9 @@ import { logSuccess, logWarning } from './common/utils/logger';
 
       inject: [ConfigService],
     }),
+
+    UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

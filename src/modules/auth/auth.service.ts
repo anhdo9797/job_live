@@ -1,11 +1,70 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { CreateUserDto, LoginUserDto } from '../users/dto/create-user.dto';
+import { UsersService } from '../users/users.service';
 import { UpdateAuthDto } from './dto/update-auth.dto';
+import { logError } from 'src/common/utils/logger';
+import { Auth } from './entities/auth.entity';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService,
+  ) {}
+
+  async login(loginDto: LoginUserDto) {
+    try {
+      const hasUser = await this.usersService.validateUser(
+        loginDto.email,
+        loginDto.password,
+      );
+      if (!hasUser) {
+        throw new BadRequestException('Invalid email or password');
+      }
+      return {
+        access_token: this.jwtService.sign({
+          email: hasUser.email,
+          id: hasUser._id,
+        }),
+        user: {
+          ...hasUser,
+          password: undefined,
+        },
+      };
+    } catch (error) {
+      console.error(
+        '🚀 ~ file: auth.service.ts ~ line 41 ~ AuthService ~ login ~ error',
+        error,
+      );
+
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async createUser(user: CreateUserDto): Promise<Auth> {
+    try {
+      const { email } = user;
+      const isEmailExist = await this.usersService.findByEmail(email);
+      if (isEmailExist) {
+        throw new BadRequestException('email already exist');
+      }
+      const newUser = await this.usersService.create(user);
+
+      return {
+        access_token: this.jwtService.sign({
+          email: newUser.email,
+          id: newUser._id,
+        }),
+
+        user: {
+          ...newUser,
+          password: undefined,
+        },
+      };
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 
   findAll() {
