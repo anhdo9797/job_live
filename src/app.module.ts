@@ -1,12 +1,13 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LoggerMiddleware } from './common/interceptors/logger.middleware';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { MongooseModule } from '@nestjs/mongoose';
 import { logSuccess, logWarning } from './common/utils/logger';
-import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { UsersModule } from './modules/users/users.module';
+import { VerificationModule } from './modules/verification/verification.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -31,7 +32,7 @@ import { AuthModule } from './modules/auth/auth.module';
 
       inject: [ConfigService],
     }),
-
+    VerificationModule,
     UsersModule,
     AuthModule,
   ],
