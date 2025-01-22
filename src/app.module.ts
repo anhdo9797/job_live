@@ -15,6 +15,8 @@ import { logSuccess, logWarning } from './common/utils/logger';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { VerificationModule } from './modules/verification/verification.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './modules/auth/guard/jwt-auth.guard';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -55,7 +57,13 @@ import { VerificationModule } from './modules/verification/verification.module';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

@@ -2,8 +2,8 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto, LoginUserDto } from '../users/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
-import { Auth } from './entities/auth.entity';
 import { VerificationService } from '../verification/verification.service';
+import { Auth } from './entities/auth.entity';
 
 @Injectable()
 export class AuthService {
@@ -26,6 +26,7 @@ export class AuthService {
         access_token: this.jwtService.sign({
           email: hasUser.email,
           id: hasUser._id,
+          role: hasUser.role,
         }),
         user: {
           ...hasUser,

@@ -28,7 +28,6 @@ export class UsersService {
       throw new Error('Email not found');
     }
 
-
     const isPasswordMatching = await this.comparePasswords(
       password,
       user.password,
@@ -37,15 +36,15 @@ export class UsersService {
     if (!isPasswordMatching) {
       throw new Error('Invalid password');
     }
- 
+
     return user.toObject();
   }
 
   async findByEmail(email: string): Promise<User | undefined> {
     return this.userModel.findOne({ email });
   }
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findById(id: string): Promise<User | undefined> {
+    return this.userModel.findById(id);
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {

@@ -1,19 +1,19 @@
 import { styleText } from 'node:util';
 
-function logError(message: string) {
-  console.log(styleText('red', message));
+function logWarning(message: string, ...optionalParams: any[]) {
+  console.log(styleText('yellow', message), ...optionalParams);
 }
 
-function logInfo(message: any) {
-  console.log(styleText('blue', message));
+function logError(message: string, ...optionalParams: any[]) {
+  console.error(styleText('red', message), ...optionalParams);
 }
 
-function logWarning(message: string) {
-  console.log(styleText('yellow', message));
+function logInfo(message: string, ...optionalParams: any[]) {
+  console.info(styleText('blue', message), ...optionalParams);
 }
 
-function logSuccess(message: string) {
-  console.log(styleText('green', message));
+function logSuccess(message: string, ...optionalParams: any[]) {
+  console.log(styleText('green', message), ...optionalParams);
 }
 
 export { logError, logInfo, logWarning, logSuccess };

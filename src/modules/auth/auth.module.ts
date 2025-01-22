@@ -3,16 +3,17 @@ import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { UsersModule } from '../users/users.module';
+import { VerificationModule } from '../verification/verification.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { VerificationModule } from '../verification/verification.module';
+import { JwtStrategy } from './guard/jwt.strategy';
 
 @Module({
   imports: [
     UsersModule,
     VerificationModule,
     PassportModule,
-
+    PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
@@ -22,7 +23,8 @@ import { VerificationModule } from '../verification/verification.module';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, JwtStrategy],
+
   exports: [AuthService],
 })
 export class AuthModule {}
