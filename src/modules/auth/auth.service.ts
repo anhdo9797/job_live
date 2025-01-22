@@ -2,8 +2,6 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto, LoginUserDto } from '../users/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
-import { UpdateAuthDto } from './dto/update-auth.dto';
-import { logError } from 'src/common/utils/logger';
 import { Auth } from './entities/auth.entity';
 
 @Injectable()
@@ -75,7 +73,7 @@ export class AuthService {
     return `This action returns a #${id} auth`;
   }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
+  update(id: number, updateAuthDto: any) {
     return `This action updates a #${id} auth`;
   }
 

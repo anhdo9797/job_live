@@ -7,6 +7,7 @@ import { AppModule } from './app.module';
 import { APP_PREFIX } from './common/constants/app_constants';
 import { logSuccess } from './common/utils/logger';
 import { I18nValidationExceptionFilter, I18nValidationPipe } from 'nestjs-i18n';
+import { createSwagger } from './common/config/swagger.config';
 
 declare const module: any;
 
@@ -36,6 +37,8 @@ async function bootstrap() {
       detailedErrors: false,
     }),
   );
+
+  createSwagger(app);
   // get port env
   const config = app.get(ConfigService);
   const port = config.get<number>('PORT');
