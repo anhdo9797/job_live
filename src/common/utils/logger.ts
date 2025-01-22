@@ -4,7 +4,7 @@ function logError(message: string) {
   console.log(styleText('red', message));
 }
 
-function logInfo(message: string) {
+function logInfo(message: any) {
   console.log(styleText('blue', message));
 }
 

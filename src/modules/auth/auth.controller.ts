@@ -22,8 +22,14 @@ export class AuthController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Post('send-otp-to-email')
+  @Post('send-otp')
   sendOtpToEmail(@Body() body: { email: string }) {
     return this.verification.sendCode(body.email);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('verify-otp')
+  verifyOtp(@Body() body: { email: string; code: string }) {
+    return this.verification.verifyCode(body.email, body.code);
   }
 }

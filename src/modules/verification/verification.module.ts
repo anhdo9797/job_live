@@ -1,4 +1,5 @@
 import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -25,6 +26,13 @@ import { VerificationService } from './verification.service';
           auth: {
             user: configServices.get('MAIL_USER'),
             pass: configServices.get('MAIL_PASS'),
+          },
+        },
+        template: {
+          dir: 'src/mail/templates',
+          adapter: new HandlebarsAdapter(),
+          options: {
+            strict: true,
           },
         },
       }),

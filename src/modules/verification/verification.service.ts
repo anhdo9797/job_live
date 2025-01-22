@@ -1,8 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { MailerService } from '@nestjs-modules/mailer';
+import {
+  BadGatewayException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Verification } from './entities/verification.schema';
-import { InjectModel } from '@nestjs/mongoose';
-import { MailerService } from '@nestjs-modules/mailer';
+import {
+  MAIL_TEMPLATE_PATH,
+  SUBJECT_MAIL_VERIFICATION,
+} from 'src/common/constants/app_constants';
 @Injectable()
 export class VerificationService {
   constructor(
@@ -17,94 +25,36 @@ export class VerificationService {
     await this.mailerService.sendMail({
       to: email,
       from: '"Jobs Live" <your-email@gmail.com>',
-      subject: 'Email Verification',
-      text: `Your verification code is: ${code}`,
-      html: `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Email Verification</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f9;
-      margin: 0;
-      padding: 0;
-      color: #333;
-    }
-    .email-container {
-      max-width: 600px;
-      margin: 20px auto;
-      background: #ffffff;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    .email-header {
-      background: #007bff;
-      color: #fff;
-      padding: 20px;
-      text-align: center;
-    }
-    .email-header h1 {
-      margin: 0;
-      font-size: 1.8rem;
-    }
-    .email-body {
-      padding: 20px;
-    }
-    .email-body p {
-      line-height: 1.6;
-      margin: 0 0 10px;
-    }
-    .code {
-      display: inline-block;
-      background: #f4f4f9;
-      border: 1px solid #007bff;
-      color: #007bff;
-      font-weight: bold;
-      padding: 10px 20px;
-      border-radius: 4px;
-      margin: 20px 0;
-    }
-    .email-footer {
-      background: #f9f9f9;
-      padding: 10px;
-      text-align: center;
-      font-size: 0.9rem;
-      color: #666;
-      border-top: 1px solid #ddd;
-    }
-  </style>
-</head>
-<body>
-  <div class="email-container">
-    <div class="email-header">
-      <h1>Jobs Live - Email Verification</h1>
-    </div>
-    <div class="email-body">
-      <p>Dear User,</p>
-      <p>Thank you for signing up with <strong>Jobs Live</strong>. To complete your registration, please verify your email by using the code below:</p>
-      <p class="code">${code}</p>
-      <p>This code is valid for <strong>60 minutes</strong>. Please do not share this code with anyone for your account's security.</p>
-      <p>If you did not request this email, please ignore it.</p>
-    </div>
-    <div class="email-footer">
-      <p>&copy; 2025 Jobs Live. All rights reserved.</p>
-    </div>
-  </div>
-</body>
-</html>
-`,
+      subject: SUBJECT_MAIL_VERIFICATION,
+      template: MAIL_TEMPLATE_PATH,
+      context: { email, code },
     });
 
     const verification = new this.verificationModel({
       email,
-      code: Math.floor(100000 + Math.random() * 900000),
-      expired: new Date(Date.now() + 60000),
+      code,
+      expired: new Date(Date.now() + 5000),
     });
     await verification.save();
+
+    return { message: `Otp send success to mail ${email}` };
+  }
+
+  async verifyCode(email: string, code: string) {
+    const verification = await this.verificationModel.findOne({ email });
+
+    if (!verification) {
+      throw new NotFoundException('Otp code not found');
+    }
+
+    if (verification.code !== code) {
+      throw new BadGatewayException('Otp code not match');
+    }
+
+    if (verification.expired < new Date()) {
+      throw new BadGatewayException('Otp code expired');
+    }
+
     return verification;
   }
 }
