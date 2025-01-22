@@ -1,0 +1,5 @@
+{
+    "OTP_INVALID": "Invalid OTP code",
+    "OTP_EXPIRED": "OTP code has expired",
+    "OTP_NOT_FOUND": "OTP code not found"
+}

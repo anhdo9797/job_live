@@ -11,10 +11,12 @@ import {
   MAIL_TEMPLATE_PATH,
   SUBJECT_MAIL_VERIFICATION,
 } from 'src/common/constants/app_constants';
+import { I18nService } from 'nestjs-i18n';
 @Injectable()
 export class VerificationService {
   constructor(
     private readonly mailerService: MailerService,
+    private readonly i18nService: I18nService,
     @InjectModel(Verification.name)
     private verificationModel: Model<Verification>,
   ) {}
@@ -44,15 +46,15 @@ export class VerificationService {
     const verification = await this.verificationModel.findOne({ email });
 
     if (!verification) {
-      throw new NotFoundException('Otp code not found');
+      throw new NotFoundException(this.i18nService.t('messages.OTP_NOT_FOUND'));
     }
 
     if (verification.code !== code) {
-      throw new BadGatewayException('Otp code not match');
+      throw new BadGatewayException(this.i18nService.t('messages.OTP_INVALID'));
     }
 
     if (verification.expired < new Date()) {
-      throw new BadGatewayException('Otp code expired');
+      throw new BadGatewayException(this.i18nService.t('messages.OTP_EXPIRED'));
     }
 
     return verification;

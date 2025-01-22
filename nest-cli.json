@@ -4,8 +4,9 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "assets": [
-      "mail/templates/**/*"
-    ], 
-    "watchAssets": true  
+      "mail/templates/**/*",
+      "i18n/**/*"
+    ],
+    "watchAssets": true
   }
 }

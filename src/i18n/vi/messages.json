@@ -1,0 +1,14 @@
+{
+    "OTP_INVALID": "Mã OTP không hợp lệ",
+    "OTP_EXPIRED": "Mã OTP đã hết hạn",
+    "OTP_NOT_FOUND": "Mã OTP không tồn tại",
+    "OTP_SENT": "Mã OTP đã được gửi",
+    "OTP_VERIFIED": "Mã OTP đã được xác thực",
+    "OTP_VERIFIED_SUCCESS": "Xác thực mã OTP thành công",
+    "OTP_VERIFIED_FAIL": "Xác thực mã OTP thất bại",
+    "OTP_RESEND": "Gửi lại mã OTP",
+    "OTP_RESEND_SUCCESS": "Gửi lại mã OTP thành công",
+    "OTP_RESEND_FAIL": "Gửi lại mã OTP thất bại",
+    "OTP_RESEND_LIMIT": "Đã đạt giới hạn gửi lại mã OTP",
+    "OTP_RESEND_LIMIT_SUCCESS": "Đã đạt giới hạn gửi lại mã OTP"
+}

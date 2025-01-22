@@ -12,8 +12,8 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() signInDto: CreateUserDto) {
-    return this.authService.login(signInDto);
+  signIn(@Body() logInDto: CreateUserDto) {
+    return this.authService.login(logInDto);
   }
   @HttpCode(HttpStatus.CREATED)
   @Post('register')

@@ -1,0 +1,9 @@
+{
+    "email": "email",
+    "password": "mật khẩu",
+    "NOT_EMPTY": "$t(validation.{property}) không được để trống",
+    "INVALID_EMAIL": "email không hợp lệ",
+    "INVALID_BOOLEAN": "{property} không phải là kiểu boolean",
+    "MIN": "{property} với giá trị: \"{value}\" cần ít nhất là {constraints.0}, nếu không và {message}",
+    "MAX": "{property} với giá trị: \"{value}\" cần ít hơn {constraints.0}, nếu không và {message}"
+}
