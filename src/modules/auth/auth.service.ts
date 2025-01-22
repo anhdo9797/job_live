@@ -3,12 +3,14 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto, LoginUserDto } from '../users/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
 import { Auth } from './entities/auth.entity';
+import { VerificationService } from '../verification/verification.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    private verificationService: VerificationService,
   ) {}
 
   async login(loginDto: LoginUserDto) {
@@ -47,7 +49,10 @@ export class AuthService {
       if (isEmailExist) {
         throw new BadRequestException('email already exist');
       }
+
+      await this.verificationService.verifyCode(email, user.code);
       const newUser = await this.usersService.create(user);
+      await this.verificationService.deletedAllWithEmail(email);
 
       return {
         access_token: this.jwtService.sign({
@@ -73,7 +78,7 @@ export class AuthService {
     return `This action returns a #${id} auth`;
   }
 
-  update(id: number, updateAuthDto: any) {
+  update(id: number) {
     return `This action updates a #${id} auth`;
   }
 

@@ -1,6 +1,7 @@
 {
     "OTP_INVALID": "Mã OTP không hợp lệ",
     "OTP_EXPIRED": "Mã OTP đã hết hạn",
+    "OTP_INCORRECT": "Mã OTP không chính xác",
     "OTP_NOT_FOUND": "Mã OTP không tồn tại",
     "OTP_SENT": "Mã OTP đã được gửi",
     "OTP_VERIFIED": "Mã OTP đã được xác thực",

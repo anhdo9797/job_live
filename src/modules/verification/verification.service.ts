@@ -32,31 +32,39 @@ export class VerificationService {
       context: { email, code },
     });
 
+    const expired = new Date(Date.now() + 5 * 60 * 1000);
+
     const verification = new this.verificationModel({
       email,
       code,
-      expired: new Date(Date.now() + 5000),
+      expired: expired,
     });
     await verification.save();
 
     return { message: `Otp send success to mail ${email}` };
   }
 
-  async verifyCode(email: string, code: string) {
-    const verification = await this.verificationModel.findOne({ email });
-
-    if (!verification) {
-      throw new NotFoundException(this.i18nService.t('messages.OTP_NOT_FOUND'));
+  async verifyCode(email: string, code: string): Promise<Verification> {
+    if (code.length < 5) {
+      throw new NotFoundException(this.i18nService.t('messages.OTP_INVALID'));
     }
 
-    if (verification.code !== code) {
-      throw new BadGatewayException(this.i18nService.t('messages.OTP_INVALID'));
+    const verification = await this.verificationModel.findOne({ code }).exec();
+
+    if (verification.email !== email) {
+      throw new BadGatewayException(
+        this.i18nService.t('messages.OTP_INCORRECT'),
+      );
     }
 
-    if (verification.expired < new Date()) {
+    if (verification.expired <= new Date()) {
       throw new BadGatewayException(this.i18nService.t('messages.OTP_EXPIRED'));
     }
 
     return verification;
+  }
+
+  async deletedAllWithEmail(email: string) {
+    return this.verificationModel.deleteMany({ email }).exec();
   }
 }
