@@ -1,14 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './entities/user.schema';
 import { Model } from 'mongoose';
+import { EnterprisesService } from '../enterprises/enterprises.service';
+import { EnterpriseDto } from '../enterprises/dto/create-enterprise.dto';
+import { UpdateEnterpriseDto } from '../enterprises/dto/update-enterprise.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<User>,
+    private readonly enterprisesService: EnterprisesService,
+  ) {}
 
   async hashPassword(password: string): Promise<string> {
     const saltRounds = 10;
@@ -59,9 +65,28 @@ export class UsersService {
     return json;
   }
 
+  async handleProfile(
+    user: User,
+    data: EnterpriseDto | UpdateEnterpriseDto,
+  ): Promise<any> {
+    try {
+      if (user.role === 'enterprise') {
+        await this.enterprisesService.handleProfile(user, data);
+      }
+      return null;
+    } catch (error) {
+      console.error(
+        '🚀 ~ file: users.service.ts ~ line 64 ~ UsersService ~ handleProfile ~ error',
+        error,
+      );
+      throw new BadRequestException(error.message);
+    }
+  }
+
   async findAll(): Promise<User[]> {
     return this.userModel.find().exec();
   }
+
   update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
   }

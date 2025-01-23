@@ -1,10 +1,9 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateUserDto, LoginUserDto } from '../users/dto/create-user.dto';
 import { VerificationService } from '../verification/verification.service';
 import { AuthService } from './auth.service';
 import { SendEmailDto, VerifyEmailDto } from './dto/auth.dto';
-import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -43,7 +42,6 @@ export class AuthController {
   }
 
   @HttpCode(HttpStatus.OK)
-  // @UseGuards(AuthGuard('local'))
   @Post('login')
   signIn(@Body() logInDto: LoginUserDto) {
     return this.authService.login(logInDto);

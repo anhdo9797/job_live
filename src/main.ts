@@ -8,6 +8,7 @@ import { APP_PREFIX } from './common/constants/app_constants';
 import { logSuccess } from './common/utils/logger';
 import { I18nValidationExceptionFilter, I18nValidationPipe } from 'nestjs-i18n';
 import { createSwagger } from './common/config/swagger.config';
+import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 
 declare const module: any;
 
@@ -39,6 +40,10 @@ async function bootstrap() {
   );
 
   createSwagger(app);
+
+  // interceptor
+  app.useGlobalInterceptors(new TransformInterceptor());
+
   // get port env
   const config = app.get(ConfigService);
   const port = config.get<number>('PORT');

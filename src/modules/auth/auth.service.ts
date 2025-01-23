@@ -4,6 +4,10 @@ import { CreateUserDto, LoginUserDto } from '../users/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
 import { VerificationService } from '../verification/verification.service';
 import { Auth } from './entities/auth.entity';
+import { User } from '../users/entities/user.schema';
+import { UserTypeResponse as AuthResponseType } from 'src/common/types/auth.types';
+import { ResultResponse } from 'src/common/types/response';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class AuthService {
@@ -11,9 +15,12 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
     private verificationService: VerificationService,
+    private i18nService: I18nService,
   ) {}
 
-  async login(loginDto: LoginUserDto) {
+  async login(
+    loginDto: LoginUserDto,
+  ): Promise<ResultResponse<AuthResponseType>> {
     try {
       const hasUser = await this.usersService.validateUser(
         loginDto.email,
@@ -22,15 +29,15 @@ export class AuthService {
       if (!hasUser) {
         throw new BadRequestException('Invalid email or password');
       }
+
       return {
-        access_token: this.jwtService.sign({
-          email: hasUser.email,
-          id: hasUser._id,
-          role: hasUser.role,
-        }),
-        user: {
-          ...hasUser,
-          password: undefined,
+        message: this.i18nService.t('messages.LOGIN_SUCCESS'),
+        result: {
+          access_token: this.generateToken(hasUser),
+          user: {
+            ...hasUser,
+            password: undefined,
+          },
         },
       };
     } catch (error) {
@@ -56,11 +63,7 @@ export class AuthService {
       await this.verificationService.deletedAllWithEmail(email);
 
       return {
-        access_token: this.jwtService.sign({
-          email: newUser.email,
-          id: newUser._id,
-        }),
-
+        access_token: this.generateToken(newUser),
         user: {
           ...newUser,
           password: undefined,
@@ -69,6 +72,14 @@ export class AuthService {
     } catch (error) {
       throw new BadRequestException(error.message);
     }
+  }
+
+  generateToken(user: User): string {
+    return this.jwtService.sign({
+      email: user.email,
+      _id: user._id,
+      role: user.role,
+    });
   }
 
   findAll() {

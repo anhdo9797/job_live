@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Patch,
+  Post,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -12,6 +13,8 @@ import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
+import { EnterpriseDto } from '../enterprises/dto/create-enterprise.dto';
+import { UpdateEnterpriseDto } from '../enterprises/dto/update-enterprise.dto';
 @ApiTags('User')
 @Controller('users')
 export class UsersController {
@@ -22,6 +25,15 @@ export class UsersController {
   getProfile(@Request() req) {
     const { id } = req.user;
     return this.usersService.findById(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('profile')
+  handleProfile(
+    @Request() req,
+    @Body() data: EnterpriseDto | UpdateEnterpriseDto,
+  ) {
+    return this.usersService.handleProfile(req.user, data);
   }
 
   @Get(':id')

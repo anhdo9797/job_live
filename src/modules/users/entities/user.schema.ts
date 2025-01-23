@@ -1,11 +1,17 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Schema as MongoSchema } from 'mongoose';
 import { ROLES } from 'src/common/constants/role.enum';
 
 export type UserDocument = HydratedDocument<User>;
 
 @Schema()
 export class User {
+  @Prop({
+    auto: true,
+    type: MongoSchema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  })
   _id: string;
 
   @Prop({ required: true, type: String })
@@ -27,7 +33,7 @@ export class User {
   role: string;
 
   @Prop({ default: false })
-  isVerified: boolean;
+  icActive: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
