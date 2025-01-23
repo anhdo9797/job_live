@@ -1,13 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUserDto, LoginUserDto } from '../users/dto/create-user.dto';
-import { UsersService } from '../users/users.service';
-import { VerificationService } from '../verification/verification.service';
-import { Auth } from './entities/auth.entity';
-import { User } from '../users/entities/user.schema';
+import { I18nService } from 'nestjs-i18n';
 import { UserTypeResponse as AuthResponseType } from 'src/common/types/auth.types';
 import { ResultResponse } from 'src/common/types/response';
-import { I18nService } from 'nestjs-i18n';
+import { CreateUserDto, LoginUserDto } from '../users/dto/create-user.dto';
+import { User } from '../users/entities/user.schema';
+import { UsersService } from '../users/users.service';
+import { VerificationService } from '../verification/verification.service';
 
 @Injectable()
 export class AuthService {
@@ -50,7 +49,9 @@ export class AuthService {
     }
   }
 
-  async createUser(user: CreateUserDto): Promise<Auth> {
+  async createUser(
+    user: CreateUserDto,
+  ): Promise<ResultResponse<AuthResponseType>> {
     try {
       const { email } = user;
       const isEmailExist = await this.usersService.findByEmail(email);
@@ -63,10 +64,13 @@ export class AuthService {
       await this.verificationService.deletedAllWithEmail(email);
 
       return {
-        access_token: this.generateToken(newUser),
-        user: {
-          ...newUser,
-          password: undefined,
+        message: this.i18nService.t('messages.REGISTER_SUCCESS'),
+        result: {
+          access_token: this.generateToken(newUser),
+          user: {
+            ...newUser,
+            password: undefined,
+          },
         },
       };
     } catch (error) {

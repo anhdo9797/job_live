@@ -9,6 +9,7 @@ import { logSuccess } from './common/utils/logger';
 import { I18nValidationExceptionFilter, I18nValidationPipe } from 'nestjs-i18n';
 import { createSwagger } from './common/config/swagger.config';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
+import { ErrorsInterceptor } from './common/interceptors/errors.interceptor';
 
 declare const module: any;
 
@@ -43,6 +44,7 @@ async function bootstrap() {
 
   // interceptor
   app.useGlobalInterceptors(new TransformInterceptor());
+  app.useGlobalInterceptors(new ErrorsInterceptor());
 
   // get port env
   const config = app.get(ConfigService);
