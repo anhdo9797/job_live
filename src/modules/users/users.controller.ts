@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -29,6 +31,7 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Post('profile')
+  @HttpCode(HttpStatus.OK)
   handleProfile(
     @Request() req,
     @Body() data: EnterpriseDto | UpdateEnterpriseDto,

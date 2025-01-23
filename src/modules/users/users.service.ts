@@ -71,7 +71,7 @@ export class UsersService {
   ): Promise<any> {
     try {
       if (user.role === 'enterprise') {
-        await this.enterprisesService.handleProfile(user, data);
+        return this.enterprisesService.handleProfile(user, data);
       }
       return null;
     } catch (error) {
