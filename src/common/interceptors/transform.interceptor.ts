@@ -11,6 +11,9 @@ export interface IResponse<T> {
   data: T;
   message?: string;
   statusCode: number;
+
+  currentPage?: number;
+  totalPages?: number;
 }
 
 @Injectable()
@@ -25,12 +28,26 @@ export class TransformInterceptor<T>
       map((data) => {
         const response = context.switchToHttp().getResponse();
         const statusCode = response.statusCode;
-
-        return {
+        let res: IResponse<any> = {
           message: data.message || 'request success',
           statusCode: statusCode,
           data: data.result,
         };
+
+        if (!!response.currentPage) {
+          res = {
+            ...res,
+            currentPage: response.currentPage,
+          };
+        }
+        if (!!response.totalPages) {
+          res = {
+            ...res,
+            totalPages: response.totalPages,
+          };
+        }
+
+        return res;
       }),
     );
   }

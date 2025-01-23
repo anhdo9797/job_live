@@ -13,5 +13,7 @@
     "OTP_RESEND_LIMIT": "Đã đạt giới hạn gửi lại mã OTP",
     "OTP_RESEND_LIMIT_SUCCESS": "Đã đạt giới hạn gửi lại mã OTP",
     "LOGIN_SUCCESS": "Đăng nhập thành công",
-    "LOGIN_FAILED": "Đăng nhập thất bại"
+    "LOGIN_FAILED": "Đăng nhập thất bại",
+    "UPDATE_INFO_SUCCESS": "Cập nhật thông tin thành công",
+    "UPDATE_INFO_FAILED": "Cập nhật thông tin thất bại"
 }

@@ -59,7 +59,10 @@ export class AuthService {
         throw new BadRequestException('email already exist');
       }
 
-      await this.verificationService.verifyCode(email, user.code);
+      if (process.env.VALIDATE_EMAIL === 'true') {
+        await this.verificationService.verifyCode(email, user.code);
+      }
+
       const newUser = await this.usersService.create(user);
       await this.verificationService.deletedAllWithEmail(email);
 

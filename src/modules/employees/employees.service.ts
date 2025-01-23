@@ -26,7 +26,7 @@ export class EmployeesService {
       const updater = await this.update(current._id, body);
 
       return {
-        message: this.i18nService.t('messages.UPDATE_EMPLOYEE_SUCCESS'),
+        message: this.i18nService.t('messages.UPDATE_INFO_SUCCESS'),
         result: updater,
       };
     }
@@ -37,7 +37,7 @@ export class EmployeesService {
     });
 
     return {
-      message: this.i18nService.t('messages.CREATED_EMPLOYEE_SUCCESS'),
+      message: this.i18nService.t('messages.UPDATE_INFO_SUCCESS'),
       result: creator,
     };
   }
@@ -46,8 +46,34 @@ export class EmployeesService {
     return await this.employeeModel.findOne({ userId: id });
   }
 
-  async findAll() {
-    return await this.employeeModel.find().exec();
+  async findAll(
+    page: number = 1,
+    pageSize: number = 10,
+    search: string,
+  ): Promise<ResultResponse<Employee[]>> {
+    const skip = (page - 1) * pageSize;
+
+    const data = await this.employeeModel
+      .find()
+      .or([
+        {
+          name: { $regex: search, $options: 'i' },
+        },
+        {
+          address: { $regex: search },
+        },
+      ])
+      .skip(skip)
+      .limit(pageSize)
+      .exec();
+
+    const total = await this.employeeModel.countDocuments();
+
+    return {
+      result: data,
+      currentPage: page,
+      totalPages: Math.ceil(total / pageSize),
+    };
   }
 
   async findOne(id: string) {
