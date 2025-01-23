@@ -8,12 +8,14 @@ import { EnterprisesService } from '../enterprises/enterprises.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.schema';
+import { EmployeesService } from '../employees/employees.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     private readonly enterprisesService: EnterprisesService,
+    private readonly employeeService: EmployeesService,
   ) {}
 
   async hashPassword(password: string): Promise<string> {
@@ -73,7 +75,7 @@ export class UsersService {
       if (user.role === 'enterprise') {
         return this.enterprisesService.handleProfile(user, data);
       }
-      return null;
+      return this.employeeService.createOrUpdate(data);
     } catch (error) {
       console.error(
         '🚀 ~ file: users.service.ts ~ line 64 ~ UsersService ~ handleProfile ~ error',

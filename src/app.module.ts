@@ -16,6 +16,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { VerificationModule } from './modules/verification/verification.module';
 import { EnterprisesModule } from './modules/enterprises/enterprises.module';
+import { EmployeesModule } from './modules/employees/employees.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -55,6 +56,7 @@ import { EnterprisesModule } from './modules/enterprises/enterprises.module';
     UsersModule,
     AuthModule,
     EnterprisesModule,
+    EmployeesModule,
   ],
   controllers: [AppController],
   providers: [

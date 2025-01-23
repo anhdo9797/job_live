@@ -17,6 +17,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 import { EnterpriseDto } from '../enterprises/dto/create-enterprise.dto';
 import { UpdateEnterpriseDto } from '../enterprises/dto/update-enterprise.dto';
+import { CreateEmployeeDto } from '../employees/dto/create-employee.dto';
+import { UpdateEmployeeDto } from '../employees/dto/update-employee.dto';
 @ApiTags('User')
 @Controller('users')
 export class UsersController {
@@ -34,7 +36,12 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   handleProfile(
     @Request() req,
-    @Body() data: EnterpriseDto | UpdateEnterpriseDto,
+    @Body()
+    data:
+      | EnterpriseDto
+      | UpdateEnterpriseDto
+      | CreateEmployeeDto
+      | UpdateEmployeeDto,
   ) {
     return this.usersService.handleProfile(req.user, data);
   }
