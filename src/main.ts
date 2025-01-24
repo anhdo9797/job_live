@@ -26,6 +26,7 @@ async function bootstrap() {
     new ValidationPipe({
       transform: true,
       enableDebugMessages: true,
+      skipNullProperties: true, // <- This line here
     }),
   );
 

@@ -14,6 +14,7 @@ export interface IResponse<T> {
 
   currentPage?: number;
   totalPages?: number;
+  totalCount?: number;
 }
 
 @Injectable()
@@ -34,16 +35,22 @@ export class TransformInterceptor<T>
           data: data.result,
         };
 
-        if (!!response.currentPage) {
+        if (!!data.currentPage) {
           res = {
             ...res,
-            currentPage: response.currentPage,
+            currentPage: data.currentPage,
           };
         }
-        if (!!response.totalPages) {
+        if (!!data.totalPages) {
           res = {
             ...res,
-            totalPages: response.totalPages,
+            totalPages: data.totalPages,
+          };
+        }
+        if (!!data.total) {
+          res = {
+            ...res,
+            totalCount: data.total,
           };
         }
 

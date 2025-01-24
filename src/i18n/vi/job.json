@@ -1,0 +1,9 @@
+{
+    "CREATED_SUCCESSFULLY": "Tạo công việc thành công",
+    "UPDATED_SUCCESSFULLY": "Cập nhật công việc thành công",
+    "DELETED_SUCCESSFULLY": "Xóa công việc thành công",
+    "NOT_FOUND": "Không tìm thấy công việc",
+    "INVALID_ID": "ID không hợp lệ",
+    "NAME_REQUIRED": "Tên công việc không được để trống",
+    "CREATED_FAILED": "Tạo công việc thất bại"
+}

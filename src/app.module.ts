@@ -13,10 +13,11 @@ import { AppService } from './app.service';
 import { LoggerMiddleware } from './common/interceptors/logger.middleware';
 import { logSuccess, logWarning } from './common/utils/logger';
 import { AuthModule } from './modules/auth/auth.module';
+import { EmployeesModule } from './modules/employees/employees.module';
+import { EnterprisesModule } from './modules/enterprises/enterprises.module';
+import { JobsModule } from './modules/job/job.module';
 import { UsersModule } from './modules/users/users.module';
 import { VerificationModule } from './modules/verification/verification.module';
-import { EnterprisesModule } from './modules/enterprises/enterprises.module';
-import { EmployeesModule } from './modules/employees/employees.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -57,15 +58,10 @@ import { EmployeesModule } from './modules/employees/employees.module';
     AuthModule,
     EnterprisesModule,
     EmployeesModule,
+    JobsModule,
   ],
   controllers: [AppController],
-  providers: [
-    AppService,
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: JwtAuthGuard,
-    // },
-  ],
+  providers: [AppService],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
