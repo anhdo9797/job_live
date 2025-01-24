@@ -1,8 +1,19 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import * as mongoose from 'mongoose';
+import * as AutoIncrementFactory from 'mongoose-sequence';
+const AutoIncrement = AutoIncrementFactory(mongoose);
 
 @Schema()
-export class Job extends Document {
+export class Job extends mongoose.Document {
+  @Prop()
+  _id: number;
+
+  @Prop({ auto: true, type: mongoose.Types.ObjectId, ref: 'User' })
+  userId: string;
+
+  @Prop({ auto: true, type: mongoose.Types.ObjectId, ref: 'Enterprise' })
+  enterpriseId: string;
+
   @Prop({ required: true })
   title: string;
 
@@ -30,5 +41,4 @@ export class Job extends Document {
   @Prop({ type: Date })
   updatedAt: Date;
 }
-
 export const JobSchema = SchemaFactory.createForClass(Job);

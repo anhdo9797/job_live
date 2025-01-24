@@ -1,6 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Schema as MongoSchema } from 'mongoose';
 import { ROLES } from 'src/common/constants/role.enum';
+import { Employee } from 'src/modules/employees/entities/employee.schema';
+import { Enterprise } from 'src/modules/enterprises/entities/enterprise.schema';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -13,6 +15,18 @@ export class User {
     required: true,
   })
   _id: string;
+
+  @Prop({
+    type: MongoSchema.Types.ObjectId,
+    ref: Enterprise.name,
+  })
+  enterpriseId: string;
+
+  @Prop({
+    type: MongoSchema.Types.ObjectId,
+    ref: Employee.name,
+  })
+  employeeId: string;
 
   @Prop({ required: true, type: String })
   name: string;
@@ -31,9 +45,6 @@ export class User {
 
   @Prop({ type: String, enum: ROLES })
   role: string;
-
-  @Prop({ default: false })
-  icActive: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

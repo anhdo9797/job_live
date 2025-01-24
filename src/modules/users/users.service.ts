@@ -73,7 +73,16 @@ export class UsersService {
   ): Promise<any> {
     try {
       if (user.role === 'enterprise') {
-        return this.enterprisesService.handleProfile(user, data);
+        const enterprise = await this.enterprisesService.handleProfile(
+          user,
+          data,
+        );
+
+        // this.userModel.updateMany(
+        //   { _id: user._id },
+        //   { enterpriseId: enterprise._id },
+        // );
+        return enterprise;
       }
       return this.employeeService.createOrUpdate(data);
     } catch (error) {
