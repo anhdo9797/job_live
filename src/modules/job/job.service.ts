@@ -1,11 +1,11 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Job } from './entities/job.schema';
-import { CreateJobDto } from './dto/create-job.dto';
-import { ResultResponse } from 'src/common/types/response';
 import { I18nService } from 'nestjs-i18n';
+import { ResultResponse } from 'src/common/types/response';
+import { CreateJobDto } from './dto/create-job.dto';
 import { FindJobDto } from './dto/find-job.dto';
+import { Job } from './entities/job.schema';
 
 @Injectable()
 export class JobsService {

@@ -19,7 +19,7 @@ export class Enterprise {
     ref: 'User',
     required: true,
   })
-  creator: string;
+  userId: string;
 
   @Prop({ required: true, type: String })
   name: string;

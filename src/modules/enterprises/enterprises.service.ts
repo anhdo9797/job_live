@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Scope } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -8,12 +8,13 @@ import { User } from '../users/entities/user.schema';
 import { EnterpriseDto } from './dto/create-enterprise.dto';
 import { UpdateEnterpriseDto } from './dto/update-enterprise.dto';
 import { Enterprise } from './entities/enterprise.schema';
-
+import { UsersService } from '../users/users.service';
+@Injectable({ scope: Scope.REQUEST })
 @Injectable()
 export class EnterprisesService {
   constructor(
     @InjectModel(Enterprise.name) private enterpriseModel: Model<Enterprise>,
-    @Inject(REQUEST) private readonly request: Request,
+    @Inject(REQUEST) private readonly request: any,
     private i18nService: I18nService,
   ) {}
 
@@ -60,8 +61,21 @@ export class EnterprisesService {
     }
   }
 
-  create(createEnterpriseDto: EnterpriseDto) {
-    return 'This action adds a new enterprise';
+  async create(
+    createEnterpriseDto: EnterpriseDto,
+  ): Promise<ResultResponse<Enterprise>> {
+    const userId = this.request.user._id;
+    const model = new this.enterpriseModel({
+      ...createEnterpriseDto,
+      createdAt: new Date(),
+      userId: this.request.user._id,
+    });
+    const enterprise = await model.save();
+
+    return {
+      message: this.i18nService.t('messages.CREATED_ENTERPRISE_SUCCESS'),
+      result: enterprise,
+    };
   }
 
   findAll() {

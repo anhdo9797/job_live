@@ -1,22 +1,16 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
 import { EnterpriseDto } from '../enterprises/dto/create-enterprise.dto';
 import { UpdateEnterpriseDto } from '../enterprises/dto/update-enterprise.dto';
-import { EnterprisesService } from '../enterprises/enterprises.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.schema';
-import { EmployeesService } from '../employees/employees.service';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectModel(User.name) private userModel: Model<User>,
-    private readonly enterprisesService: EnterprisesService,
-    private readonly employeeService: EmployeesService,
-  ) {}
+  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async hashPassword(password: string): Promise<string> {
     const saltRounds = 10;
@@ -71,27 +65,28 @@ export class UsersService {
     user: User,
     data: EnterpriseDto | UpdateEnterpriseDto,
   ): Promise<any> {
-    try {
-      if (user.role === 'enterprise') {
-        const enterprise = await this.enterprisesService.handleProfile(
-          user,
-          data,
-        );
+    // try {
+    //   if (user.role === 'enterprise') {
+    //     const enterprise = await this.enterprisesService.handleProfile(
+    //       user,
+    //       data,
+    //     );
 
-        // this.userModel.updateMany(
-        //   { _id: user._id },
-        //   { enterpriseId: enterprise._id },
-        // );
-        return enterprise;
-      }
-      return this.employeeService.createOrUpdate(data);
-    } catch (error) {
-      console.error(
-        '🚀 ~ file: users.service.ts ~ line 64 ~ UsersService ~ handleProfile ~ error',
-        error,
-      );
-      throw new BadRequestException(error.message);
-    }
+    //     // this.userModel.updateMany(
+    //     //   { _id: user._id },
+    //     //   { enterpriseId: enterprise._id },
+    //     // );
+    //     return enterprise;
+    //   }
+    //   return this.employeeService.createOrUpdate(data);
+    // } catch (error) {
+    //   console.error(
+    //     '🚀 ~ file: users.service.ts ~ line 64 ~ UsersService ~ handleProfile ~ error',
+    //     error,
+    //   );
+    //   throw new BadRequestException(error.message);
+    // }
+    return {};
   }
 
   async findAll(): Promise<User[]> {
@@ -99,7 +94,7 @@ export class UsersService {
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+    return this.userModel.updateOne({ _id: id }, updateUserDto);
   }
 
   remove(id: number) {

@@ -14,8 +14,6 @@ import { UsersService } from './users.service';
         schema: UserSchema,
       },
     ]),
-    EnterprisesModule,
-    EmployeesModule,
   ],
   controllers: [UsersController],
   providers: [UsersService],
